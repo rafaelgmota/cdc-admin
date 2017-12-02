@@ -1,8 +1,30 @@
 import React, { Component } from 'react';
 import './css/pure-min.css';
 import './css/side-menu.css';
+import $ from 'jquery';
 
 class App extends Component {
+
+    constructor() {
+        super();
+        this.state = {lista: []};
+    }
+
+    //Called after the mount of component
+    componentDidMount() {
+
+        $.ajax({
+            url: "http://localhost:8080/api/autores",
+            //url: "https://cdc-react.herokuapp.com/api/autores",
+            dataType: "json",
+            success: resposta => {
+                console.log(resposta);
+                //With set State react will update the screen
+                this.setState({lista: resposta});
+            }
+        });
+    }
+
   render() {
     return (
 
@@ -63,8 +85,16 @@ class App extends Component {
                             </thead>
                             <tbody>
                             <tr>
-                                <td>Alberto</td>
-                                <td>alberto.souza@caelum.com.br</td>
+                                {
+                                    this.state.lista.map(function(autor){
+                                        return (
+                                            <tr key={autor.id}>
+                                                <td>{autor.nome}</td>
+                                                <td>{autor.email}</td>
+                                            </tr>
+                                        );
+                                    })
+                                }
                             </tr>
                             </tbody>
                         </table>
